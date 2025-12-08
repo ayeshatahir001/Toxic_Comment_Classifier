@@ -1,6 +1,5 @@
 import streamlit as st
-import joblib
-from utils import remove_stopwords, clean_text, stemming
+from predict import predict_toxicity   # <-- Only import needed
 
 # --------------------- CONFIG ---------------------
 st.set_page_config(
@@ -10,11 +9,6 @@ st.set_page_config(
 )
 
 LABELS = ['toxic','severe_toxic','obscene','threat','insult','identity_hate']
-
-# Load model
-vectorizer = joblib.load("tfidf_vectorizer.pkl")
-model = joblib.load("best_toxic_model.pkl")
-
 
 # --------------------- SIDEBAR ---------------------
 st.sidebar.title("⚙️ Model Info")
@@ -40,25 +34,14 @@ Enter any sentence and see predictions instantly.
 ---
 """)
 
-
 # --------------------- HEADER ---------------------
 st.markdown("<h1 style='text-align:center;'>🛡️ Toxic Comment Classifier</h1>", unsafe_allow_html=True)
 st.write("Enter a sentence below and click **Predict Toxicity**.")
 
 st.write("---")
 
-
 # --------------------- TEXT INPUT ---------------------
 text = st.text_area("✍️ Write your comment here...", height=150)
-
-
-# --------------------- PREPROCESS FUNCTION ---------------------
-def preprocess(text):
-    text = remove_stopwords(text)
-    text = clean_text(text)
-    text = stemming(text)
-    return text
-
 
 # --------------------- PREDICT BUTTON ---------------------
 if st.button("🔎 Predict Toxicity", use_container_width=True):
@@ -66,16 +49,13 @@ if st.button("🔎 Predict Toxicity", use_container_width=True):
     if text.strip() == "":
         st.error("❗ Please enter some text!")
     else:
-        cleaned = preprocess(text)
-        vec = vectorizer.transform([cleaned])
-        preds = model.predict(vec)[0]
-        preds = [int(x) for x in preds]
+        results = predict_toxicity(text)   # <-- CALL ONE FUNCTION ONLY
 
         st.success("🎉 **Prediction Complete!**")
         st.write("### Results:")
 
-        # DISPLAY RESULTS AS COLORED TAGS
-        for label, value in zip(LABELS, preds):
+        # DISPLAY RESULTS
+        for label, value in results.items():
             color = "#FF4B4B" if value == 1 else "#4CAF50"
             result_text = "Detected" if value == 1 else "Not Detected"
             
@@ -88,13 +68,12 @@ if st.button("🔎 Predict Toxicity", use_container_width=True):
                     background-color:{color};
                     color:white;
                     font-size:16px;
-                    ">
+                ">
                     <b>{label.upper()}</b> — {result_text}
                 </div>
                 """,
                 unsafe_allow_html=True
             )
-
 
 # --------------------- FOOTER ---------------------
 st.write("---")
