@@ -27,6 +27,9 @@ def clean_text(text):
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
+def stemming(text):
+    # very simple stemming (manual)
+    return " ".join([w.rstrip("ing").rstrip("ed") for w in text.split()])
 
 def preprocess(text):
     return stemming(clean_text(remove_stopwords(text)))
@@ -38,4 +41,5 @@ def predict_toxicity(text):
     vec = tfidf.transform([cleaned])
     preds = model.predict(vec)[0]
     return {label: int(value) for label, value in zip(labels, preds)}
+
 
