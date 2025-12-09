@@ -46,7 +46,7 @@ if st.button("Predict Toxicity", use_container_width=True):
         st.write("### Results:")
 
         # --------------------- DISPLAY RESULTS ---------------------
-for label, value in results.items():
+   for label, value in results.items():
 
     value_str = str(value).lower()
     is_detected = ("detected" in value_str or value_str == "1" or value_str == "true")
@@ -69,5 +69,6 @@ for label, value in results.items():
         """,
         unsafe_allow_html=True
     )
+
 
 
