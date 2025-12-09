@@ -46,24 +46,28 @@ if st.button("Predict Toxicity", use_container_width=True):
         st.write("### Results:")
 
         # --------------------- DISPLAY RESULTS ---------------------
-        for label, value in results.items():
+for label, value in results.items():
 
-            is_detected = (value.lower() == "detected")
-            color = "#FF4B4B" if is_detected else "#4CAF50"
-            result_text = value
+    value_str = str(value).lower()
+    is_detected = ("detected" in value_str or value_str == "1" or value_str == "true")
 
-            st.markdown(
-                f"""
-                <div style="
-                    padding:10px;
-                    margin:5px 0;
-                    border-radius:6px;
-                    background-color:{color};
-                    color:white;
-                    font-size:16px;
-                ">
-                    <b>{label.upper()}</b> — {result_text}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    color = "#FF4B4B" if is_detected else "#4CAF50"
+    result_text = "Detected" if is_detected else "Not Detected"
+
+    st.markdown(
+        f"""
+        <div style="
+            padding:10px;
+            margin:5px 0;
+            border-radius:6px;
+            background-color:{color};
+            color:white;
+            font-size:16px;
+        ">
+            <b>{label.upper()}</b> — {result_text}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
