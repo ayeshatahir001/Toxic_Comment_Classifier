@@ -39,36 +39,33 @@ text = st.text_area("Write your comment here...", height=150)
 if st.button("Predict Toxicity", use_container_width=True):
 
     if text.strip() == "":
-        st.error("❗ Please enter some text!")
+        st.error(" Please enter some text!")
     else:
         results = predict_toxicity(text)
         st.success("🎉 **Prediction Complete!**")
         st.write("### Results:")
 
         # --------------------- DISPLAY RESULTS ---------------------
-   for label, value in results.items():
+        for label, value in results.items():
 
-    value_str = str(value).lower()
-    is_detected = ("detected" in value_str or value_str == "1" or value_str == "true")
+            value_str = str(value).lower()
+            is_detected = ("detected" in value_str or value_str == "1" or value_str == "true")
 
-    color = "#FF4B4B" if is_detected else "#4CAF50"
-    result_text = "Detected" if is_detected else "Not Detected"
+            color = "#FF4B4B" if is_detected else "#4CAF50"
+            result_text = "Detected" if is_detected else "Not Detected"
 
-    st.markdown(
-        f"""
-        <div style="
-            padding:10px;
-            margin:5px 0;
-            border-radius:6px;
-            background-color:{color};
-            color:white;
-            font-size:16px;
-        ">
-            <b>{label.upper()}</b> — {result_text}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-
+            st.markdown(
+                f"""
+                <div style="
+                    padding:10px;
+                    margin:5px 0;
+                    border-radius:6px;
+                    background-color:{color};
+                    color:white;
+                    font-size:16px;
+                ">
+                    <b>{label.upper()}</b> — {result_text}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
